@@ -1,0 +1,609 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Bhaskararao Karnena</title>
+<meta name="description" content="Portfolio of Bhaskararao Karnena, a Ruby on Rails full stack engineer working with Kafka, ClickHouse and React.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bhaskararao Karnena">
+<meta property="og:description" content="Portfolio of Bhaskararao Karnena, a Ruby on Rails full stack engineer working with Kafka, ClickHouse and React.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+[hidden]{display:none!important}
+html{padding-top:env(safe-area-inset-top,0px)}
+/* Layout: midnight page with two soft colour glows; floating glass nav; split hero with a 3D platform map;
+   a gradient-edged bento of work cards with a hover spotlight; timeline; skills; contact.
+   Boldness lives in the teal-to-periwinkle gradient and the 3D scene. Everything else stays calm. */
+:root {
+  --bg: #070a13;
+  --bg2: #0b1020;
+  --surface: #0e1424;
+  --surface2: #131b30;
+  --ink: #eaf0ff;
+  --muted: #9aa7c2;
+  --line: #222d49;
+  --accent: #5eead4;
+  --accent2: #8b9cff;
+  --accent-ink: #04121a;
+  --spot: rgba(94, 234, 212, 0.13);
+  --glow1: rgba(94, 234, 212, 0.16);
+  --glow2: rgba(139, 156, 255, 0.18);
+  --nav: rgba(14, 20, 36, 0.72);
+  --grad: linear-gradient(115deg, var(--accent), var(--accent2));
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Instrument Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f3f6fc; --bg2: #e9eef9; --surface: #ffffff; --surface2: #f6f8ff; --ink: #0c1226; --muted: #4a5675; --line: #d5dcee;
+    --accent: #0a7c6e; --accent2: #4558ee; --accent-ink: #ffffff; --spot: rgba(10, 124, 110, 0.1);
+    --glow1: rgba(45, 212, 191, 0.22); --glow2: rgba(99, 120, 255, 0.2); --nav: rgba(255, 255, 255, 0.78); color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f3f6fc; --bg2: #e9eef9; --surface: #ffffff; --surface2: #f6f8ff; --ink: #0c1226; --muted: #4a5675; --line: #d5dcee;
+  --accent: #0a7c6e; --accent2: #4558ee; --accent-ink: #ffffff; --spot: rgba(10, 124, 110, 0.1);
+  --glow1: rgba(45, 212, 191, 0.22); --glow2: rgba(99, 120, 255, 0.2); --nav: rgba(255, 255, 255, 0.78); color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px; position: relative; overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.glow { position: absolute; inset: 0 0 auto; height: 900px; pointer-events: none; z-index: 0;
+  background: radial-gradient(520px 380px at 12% 8%, var(--glow1), transparent 70%), radial-gradient(620px 440px at 88% 18%, var(--glow2), transparent 70%); }
+.wrap { max-width: 1120px; margin: 0 auto; position: relative; z-index: 1; }
+a { color: inherit; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 8px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -0.025em; line-height: 1.06; }
+.label { font: 500 12px/1.4 var(--mono); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+.gt { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+
+/* floating nav */
+.nav { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 10px); z-index: 20; margin: 14px auto 0; display: flex; align-items: center; justify-content: space-between; gap: 10px 14px; flex-wrap: wrap;
+  padding: 8px 10px 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--nav); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.mark { display: flex; align-items: center; gap: 10px; font: 700 16px/1 var(--display); text-decoration: none; }
+.mark i { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 10px; background: var(--grad); color: var(--accent-ink); font: 700 13px/1 var(--display); font-style: normal; }
+.links { display: flex; gap: 2px; align-items: center; flex-wrap: wrap; }
+.links a { text-decoration: none; font-size: 14px; padding: 8px 12px; border-radius: 999px; color: var(--muted); }
+.links a:hover { color: var(--ink); background: var(--surface2); }
+.links a.cta { background: var(--grad); color: var(--accent-ink); font-weight: 600; }
+.links a.cta:hover { filter: brightness(1.08); color: var(--accent-ink); }
+
+/* hero */
+.hero { padding-block: clamp(36px, 6vw, 72px) 28px; display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr); gap: clamp(20px, 4vw, 48px); align-items: center; }
+.status { display: inline-flex; gap: 9px; align-items: center; font: 500 12.5px/1 var(--body); padding: 8px 13px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--muted); }
+.status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 var(--accent); animation: pulse 2.2s ease-out infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 var(--spot); } 100% { box-shadow: 0 0 0 10px transparent; } }
+.hero h1 { font-size: clamp(2.3rem, 5.2vw, 4.2rem); font-weight: 700; margin: 18px 0 18px; }
+.lede { font-size: clamp(1rem, 1.7vw, 1.15rem); color: var(--muted); margin: 0 0 26px; max-width: 58ch; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 20px; border-radius: 14px; font: 600 15px/1 var(--body); text-decoration: none; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; transition: transform 0.15s, border-color 0.15s; }
+.btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+.btn.primary { background: var(--grad); color: var(--accent-ink); border-color: transparent; }
+
+/* 3D scene */
+.scene { margin: 0; display: grid; gap: 10px; min-width: 0; }
+.stage { position: relative; width: 100%; aspect-ratio: 1 / 1; max-height: 560px; border: 1px solid var(--line); border-radius: 28px; overflow: hidden; touch-action: pan-y; cursor: grab;
+  background: radial-gradient(circle at 50% 46%, var(--glow2), transparent 66%), radial-gradient(circle at 20% 90%, var(--glow1), transparent 55%), var(--surface); }
+.stage:active { cursor: grabbing; }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.tag3d { position: absolute; left: 0; top: 0; pointer-events: none; white-space: nowrap; font: 500 11px/1 var(--mono); padding: 6px 9px; border-radius: 999px; background: var(--nav); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid var(--line); color: var(--ink); will-change: transform; }
+.tag3d.core { background: var(--grad); color: var(--accent-ink); border-color: transparent; font-weight: 600; }
+.scene figcaption { font-size: 13px; color: var(--muted); }
+.fallback { display: grid; gap: 10px; }
+.fallback .node { padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.fallback .node b { display: block; font-family: var(--display); }
+.fallback .node span { color: var(--muted); font-size: 14px; }
+
+/* stack strip */
+.strip { overflow: hidden; border-block: 1px solid var(--line); margin-top: 20px; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.strip .track { display: flex; gap: 38px; width: max-content; padding-block: 16px; animation: slide 38s linear infinite; font: 500 14px/1 var(--mono); color: var(--muted); }
+.strip:hover .track { animation-play-state: paused; }
+.strip .track span { white-space: nowrap; }
+.strip .track span::after { content: "/"; margin-left: 38px; color: var(--accent2); }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* facts bento */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 14px; margin-top: 28px; }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 22px; display: grid; gap: 8px; align-content: start; }
+.fact b { font: 700 clamp(2.1rem, 4vw, 3rem)/1 var(--display); letter-spacing: -0.035em; width: max-content; max-width: 100%; }
+.fact span { color: var(--muted); font-size: 14.5px; }
+
+/* sections */
+section { padding-block: clamp(48px, 7vw, 96px) 0; }
+.sec-head { display: grid; gap: 10px; margin-bottom: 28px; max-width: 62ch; }
+.sec-head h2 { font-size: clamp(1.9rem, 4.4vw, 3rem); }
+.sec-head p { margin: 0; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0; list-style: none; }
+.chips li { font: 500 12.5px/1 var(--mono); padding: 7px 10px; border-radius: 8px; background: var(--surface2); border: 1px solid var(--line); color: var(--ink); }
+
+/* bento work cards */
+.bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+.card { grid-column: span 6; position: relative; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, -20%), var(--spot), transparent 60%), var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 26px; display: grid; gap: 14px; align-content: start; min-width: 0;
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform 0.2s ease-out, border-color 0.2s; will-change: transform; }
+.card:hover { border-color: var(--accent); }
+.c12 { grid-column: span 12; } .c7 { grid-column: span 7; } .c5 { grid-column: span 5; } .c4 { grid-column: span 4; }
+.card .sub { font: 500 11.5px/1.4 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.card h3 { font-size: clamp(1.25rem, 2.2vw, 1.6rem); }
+.pts { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.pts li { padding-left: 22px; position: relative; color: var(--muted); font-size: 15px; }
+.pts li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 12px; height: 2px; border-radius: 2px; background: var(--grad); }
+.pts b { color: var(--ink); font-weight: 600; }
+.c12 .pts.cols { grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 12px 32px; }
+.own { grid-column: span 12; background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--grad) border-box; border: 1px solid transparent; border-radius: 24px; padding: 28px; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px 32px; align-items: start; }
+.own .pill { justify-self: start; font: 500 11px/1 var(--mono); padding: 7px 11px; border-radius: 999px; background: var(--surface2); color: var(--accent); border: 1px solid var(--line); }
+.own h3 { font-size: clamp(1.5rem, 3vw, 2.1rem); margin: 10px 0; }
+.own p { margin: 0 0 10px; color: var(--muted); font-size: 15.5px; }
+.own > div { min-width: 0; }
+
+/* timeline */
+.tl { position: relative; display: grid; gap: 16px; padding-left: 30px; }
+.tl::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--accent), var(--accent2), transparent); border-radius: 2px; }
+.job { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 22px 24px; display: grid; gap: 8px; }
+.job::before { content: ""; position: absolute; left: -29px; top: 28px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 3px solid var(--accent); }
+.job .when { font: 500 12.5px/1.5 var(--mono); color: var(--muted); }
+.job h3 { font-size: 1.25rem; }
+.job .org { color: var(--accent); font-weight: 600; }
+.job ul { margin: 4px 0 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted); max-width: 76ch; }
+.job ul li::marker { color: var(--accent2); }
+
+/* skills */
+.skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+.sk { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px; display: grid; gap: 12px; align-content: start; }
+.sk h3 { font: 700 1rem/1.2 var(--display); letter-spacing: 0; }
+.sk.main { border-color: var(--accent); }
+.edu { margin-top: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px; display: grid; gap: 6px; }
+.edu h3 { font-size: 1.1rem; }
+.edu p { margin: 0; color: var(--muted); font-size: 15px; }
+
+/* contact */
+.contact { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 28px; padding: clamp(26px, 5vw, 60px); display: grid; gap: 20px;
+  background: radial-gradient(560px 340px at 90% 0%, var(--glow2), transparent 70%), radial-gradient(520px 320px at 0% 100%, var(--glow1), transparent 70%), var(--surface); }
+.contact h2 { font-size: clamp(2rem, 5vw, 3.4rem); max-width: 17ch; }
+.contact p { margin: 0; color: var(--muted); max-width: 58ch; }
+.addr { font: 500 15px/1.2 var(--mono); padding: 13px 16px; border-radius: 14px; border: 1px solid var(--line); background: var(--bg); user-select: all; overflow-wrap: anywhere; }
+footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .card, .c7, .c5, .c4, .c12 { grid-column: 1 / -1; }
+  .own { grid-template-columns: minmax(0, 1fr); }
+  .nav { border-radius: 22px; }
+}
+@media (max-width: 520px) { .links a { padding: 8px 9px; } .links a.cta { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .card { transition: none; transform: none; }
+  .status::before { animation: none; }
+  .strip { mask-image: none; -webkit-mask-image: none; }
+  .strip .track { animation: none; width: auto; flex-wrap: wrap; gap: 12px 26px; }
+  .strip .track span:nth-child(n+13) { display: none; }
+  .strip .track span::after { margin-left: 26px; }
+}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+  <nav class="nav" aria-label="Main">
+    <a class="mark" href="#top"><i>BK</i> Bhaskararao Karnena</a>
+    <div class="links">
+      <a href="#work">Work</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a class="cta" href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <div class="hero">
+      <div>
+        <span class="status">Open to new roles</span>
+        <h1>I build <span class="gt">Rails systems</span> for a high-volume, multi-country restaurant platform.</h1>
+        <p class="lede">3.5 years shipping production Ruby on Rails. I work across a Rails monolith and 15+ Kafka-connected microservices: payments, communications, third-party integrations and the Vantage analytics suite built on ClickHouse. I use AI coding agents daily and review everything before it merges.</p>
+        <div class="row">
+          <a class="btn primary" href="#contact">Get in touch</a>
+          <a class="btn" href="#work">See the work</a>
+          <a class="btn" href="https://github.com/bhaskar8074" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+
+      <figure class="scene">
+        <div class="stage" id="stage" aria-label="Interactive 3D map of the platform. Drag to rotate."></div>
+        <div class="fallback" id="fallback" hidden>
+          <div class="node"><b>Rails monolith</b><span>The core POS platform.</span></div>
+          <div class="node"><b>15+ Kafka-connected services</b><span>Payments, communications, integrations, Vantage analytics.</span></div>
+          <div class="node"><b>ClickHouse</b><span>Analytics warehouse fed by Kafka consumers.</span></div>
+        </div>
+        <figcaption>Drag to rotate. The centre is the Rails monolith, the outer dots are Kafka-connected services, and the moving points are events. An illustration of the platform I work on, not its exact service map.</figcaption>
+      </figure>
+    </div>
+
+    <div class="strip" aria-label="Technologies">
+      <div class="track">
+        <span>Ruby on Rails</span><span>Hotwire</span><span>Kafka</span><span>ClickHouse</span><span>React.js</span><span>PostgreSQL</span><span>Redis</span><span>Sidekiq</span><span>Heroku</span><span>Datadog</span><span>Docker</span><span>AWS</span>
+        <span>Ruby on Rails</span><span>Hotwire</span><span>Kafka</span><span>ClickHouse</span><span>React.js</span><span>PostgreSQL</span><span>Redis</span><span>Sidekiq</span><span>Heroku</span><span>Datadog</span><span>Docker</span><span>AWS</span>
+      </div>
+    </div>
+
+    <div class="facts">
+      <div class="fact"><b class="gt">3.5 yrs</b><span>shipping production Rails systems</span></div>
+      <div class="fact"><b class="gt">15+</b><span>Kafka-connected microservices around the Rails monolith</span></div>
+      <div class="fact"><b class="gt">290</b><span>Kafka events documented with AI tooling, cutting manual effort by 70%</span></div>
+      <div class="fact"><b class="gt">99.9%</b><span>uptime kept through Heroku pipelines and Datadog monitoring</span></div>
+    </div>
+
+    <section id="work">
+      <div class="sec-head">
+        <span class="label">Work</span>
+        <h2>What I've built</h2>
+        <p>Six areas of work at Sapaad, then a freelance project, my time at Webkorps, and one product of my own.</p>
+      </div>
+
+      <div class="bento">
+        <article class="card tilt c12">
+          <span class="sub">Sapaad · Vantage</span>
+          <h3>Reporting and analytics on ClickHouse</h3>
+          <ul class="chips"><li>Rails</li><li>React.js</li><li>ClickHouse</li><li>Kafka</li><li>Redis</li><li>Sidekiq</li></ul>
+          <ul class="pts cols">
+            <li><b>Reporting APIs and charts.</b> Rails APIs and React.js visualisations for sales, inventory and operations across multi-country restaurant chains.</li>
+            <li><b>ClickHouse as the warehouse.</b> Moved heavy aggregation off the transactional PostgreSQL database.</li>
+            <li><b>PostgreSQL to ClickHouse migration.</b> Part of a large migration of orders, order items, inventory and status histories, with integrity checks and re-migration of discrepancies.</li>
+            <li><b>Kafka consumers.</b> Built consumers for every platform event domain, streaming structured data into ClickHouse for near-real-time reporting.</li>
+            <li><b>Redis cache.</b> Frequently read master data is cached, reducing repeated database lookups across reporting endpoints.</li>
+            <li><b>Business summary emails.</b> Scheduled Sidekiq jobs compile key metrics and email them to restaurant owners and stakeholders.</li>
+          </ul>
+        </article>
+
+        <article class="card tilt c5">
+          <span class="sub">Sapaad · Vantage</span>
+          <h3>Ask Vantage, an LLM analytics assistant</h3>
+          <ul class="chips"><li>Sidekiq</li><li>ClickHouse</li><li>Pusher</li><li>LLM agents</li></ul>
+          <ul class="pts">
+            <li>Resolved production bugs in a natural-language analytics assistant: Sidekiq orchestration, LLM-driven SQL generation with parallel ClickHouse execution, and streamed answers over Pusher.</li>
+            <li>Traced failures end to end through the agent pipeline (SQL agent, query execution, synthesis agent) to find whether the cause sat in job processing, the data or streaming.</li>
+          </ul>
+        </article>
+
+        <article class="card tilt c7">
+          <span class="sub">Sapaad · Communications</span>
+          <h3>Messaging and third-party integrations</h3>
+          <ul class="chips"><li>Rails</li><li>Kafka</li><li>WhatsApp Business API</li><li>Zoho Books API</li></ul>
+          <ul class="pts">
+            <li><b>SMS routing.</b> Multi-provider routing with country-specific logic for cost and delivery reliability.</li>
+            <li><b>WhatsApp Business API.</b> OTPs and transactional alerts, with template management and delivery-status callbacks.</li>
+            <li><b>Zoho Books.</b> Automatic journal creation that syncs POS financial data into clients' accounting systems.</li>
+          </ul>
+        </article>
+
+        <article class="card tilt c5">
+          <span class="sub">Sapaad · Payments</span>
+          <h3>Multi-payment partner support</h3>
+          <ul class="chips"><li>Rails</li><li>Razorpay</li><li>Cashfree</li></ul>
+          <ul class="pts">
+            <li><b>Pluggable adapter architecture.</b> New-provider onboarding time dropped by 40%.</li>
+            <li>Integrated Razorpay and Cashfree with secure, PCI-compliant transaction flows, on a platform that also supports Stripe, Network International and Magnati.</li>
+          </ul>
+        </article>
+
+        <article class="card tilt c7">
+          <span class="sub">Sapaad · Platform</span>
+          <h3>Reliability and internal tools</h3>
+          <ul class="chips"><li>Hotwire</li><li>ActionCable</li><li>Heroku</li><li>Datadog</li><li>Logtail</li></ul>
+          <ul class="pts">
+            <li><b>Live operations dashboard.</b> Built with Turbo Frames, Turbo Streams, Stimulus and ActionCable, so updates arrive with no page reloads.</li>
+            <li><b>Redis beta migrator.</b> Co-designed it for controlled customer onboarding and removal during phased rollouts.</li>
+            <li><b>Data minimisation.</b> Contributed to an initiative that cut data usage by 50%, with rollback strategies for safe releases.</li>
+            <li><b>99.9% uptime.</b> Heroku pipelines with review apps, staged promotion and one-click rollback, Datadog error monitoring with Slack alerts, and Logtail for log analysis.</li>
+          </ul>
+        </article>
+
+        <article class="card tilt c12">
+          <span class="sub">Sapaad · Engineering practice</span>
+          <h3>AI-assisted engineering</h3>
+          <ul class="chips"><li>Claude</li><li>Cursor</li><li>RSpec</li><li>Kafka</li></ul>
+          <ul class="pts cols">
+            <li>Use Claude and Cursor daily to implement features, generate and extend RSpec suites, review code and trace production bugs.</li>
+            <li><b>290 Kafka events documented</b> across 15+ microservices using agent skills and structured prompts, cutting manual documentation effort by 70%.</li>
+            <li>Every piece of generated code is reviewed before merge.</li>
+          </ul>
+        </article>
+
+        <article class="card tilt c5">
+          <span class="sub">Freelance · May to Jun 2026 · Remote</span>
+          <h3>Livesel, a live e-commerce platform</h3>
+          <ul class="chips"><li>REST APIs</li><li>Postman</li></ul>
+          <ul class="pts">
+            <li>Built the backend REST APIs as an independent engagement and delivered end to end within two months.</li>
+            <li>Documented the full API in Postman Collections with request and response examples, so the frontend team could integrate on their own.</li>
+            <li>Worked directly with the client to turn requirements into API contracts and iterate on feedback.</li>
+          </ul>
+        </article>
+
+        <article class="card tilt c7">
+          <span class="sub">Webkorps · Jun 2023 to Jul 2024</span>
+          <h3>Rails applications, end to end</h3>
+          <ul class="chips"><li>Rails</li><li>Turbo</li><li>Devise</li><li>CanCanCan</li><li>Stripe</li><li>Sidekiq</li></ul>
+          <ul class="pts">
+            <li>Delivered full-stack Rails apps with features, RESTful APIs and server-rendered UI with Turbo. Also built React.js and Node.js (MERN) applications.</li>
+            <li>Built API-only Rails services for external integrations and consumed third-party APIs through RapidAPI.</li>
+            <li>Implemented authentication and authorisation with Devise, CanCanCan and Google OAuth (OmniAuth), and integrated Stripe for online payments.</li>
+          </ul>
+        </article>
+
+        <article class="own">
+          <div>
+            <span class="pill">Personal project · private, runs locally</span>
+            <h3 class="gt" style="display:inline-block">Momentum OS</h3>
+            <p>A personal operating system for goals, habits, money, reading and learning, built end to end with a Rails 8 API, PostgreSQL and a React and TypeScript front end.</p>
+            <p>It includes an AI workbench that sends nothing unless I allow it, and a desktop agent whose changes need my approval and are checked on disk. I can walk you through it live.</p>
+          </div>
+          <ul class="chips" style="align-content:start"><li>Rails 8</li><li>React + TypeScript</li><li>PostgreSQL</li><li>151 RSpec tests</li><li>24 Vitest tests</li><li>Privacy-gated AI</li><li>Approval-based desktop agent</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="experience">
+      <div class="sec-head">
+        <span class="label">Experience</span>
+        <h2>Where I've worked</h2>
+        <p>Newest first.</p>
+      </div>
+      <div class="tl">
+        <article class="job">
+          <div class="when">Jul 2024 to present · Remote</div>
+          <h3>Ruby on Rails developer · Full stack engineer</h3>
+          <div class="org">Sapaad Pvt Ltd</div>
+          <ul>
+            <li>Backend-focused engineer across Sapaad's restaurant POS ecosystem: the core Rails monolith, 15+ Kafka-connected microservices and the Vantage analytics products.</li>
+            <li>Own work in analytics on ClickHouse, communication services, payments, platform reliability and internal tools (see above).</li>
+          </ul>
+        </article>
+        <article class="job">
+          <div class="when">May 2026 to Jun 2026 · Freelance · Remote</div>
+          <h3>Backend developer</h3>
+          <div class="org">Livesel</div>
+          <ul><li>Backend REST APIs for a live e-commerce platform, delivered in two months and documented in Postman Collections.</li></ul>
+        </article>
+        <article class="job">
+          <div class="when">Jun 2023 to Jul 2024 · India</div>
+          <h3>Associate software engineer</h3>
+          <div class="org">Webkorps</div>
+          <ul>
+            <li>Full-stack Rails delivery, API-only services, Devise, CanCanCan, OmniAuth and Stripe.</li>
+            <li>Moved heavy processing to Sidekiq background jobs, wrote RSpec tests, and took part in code reviews, pair programming and team documentation.</li>
+          </ul>
+        </article>
+        <article class="job">
+          <div class="when">2021 to 2023 · India</div>
+          <h3>Full stack trainee</h3>
+          <div class="org">NXT Wave</div>
+          <ul><li>Intensive full-stack program covering Python, JavaScript, React.js, Node.js and REST API design, with capstone applications built end to end.</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="sec-head">
+        <span class="label">Skills</span>
+        <h2>Tools I work with</h2>
+        <p>Rails first, with the data, events and operations tooling around it.</p>
+      </div>
+      <div class="skills">
+        <div class="sk main"><h3>Backend</h3><ul class="chips"><li>Ruby on Rails</li><li>ActiveRecord</li><li>Sidekiq</li><li>API-only Rails</li><li>Devise</li><li>CanCanCan</li><li>Node.js</li><li>Express.js</li></ul></div>
+        <div class="sk"><h3>Languages</h3><ul class="chips"><li>Ruby</li><li>JavaScript</li><li>TypeScript</li><li>SQL</li><li>Python</li></ul></div>
+        <div class="sk"><h3>Frontend</h3><ul class="chips"><li>Hotwire</li><li>Turbo Frames</li><li>Turbo Streams</li><li>Stimulus JS</li><li>React.js</li><li>Next.js</li><li>Tailwind CSS</li><li>HTML5</li><li>CSS3</li><li>Figma</li></ul></div>
+        <div class="sk"><h3>Data and events</h3><ul class="chips"><li>PostgreSQL</li><li>ClickHouse</li><li>Redis</li><li>MySQL</li><li>MongoDB</li><li>Kafka</li></ul></div>
+        <div class="sk"><h3>Real-time</h3><ul class="chips"><li>ActionCable</li><li>WebSocket</li><li>Pusher</li></ul></div>
+        <div class="sk"><h3>Integrations</h3><ul class="chips"><li>Zoho Books API</li><li>Razorpay</li><li>Cashfree</li><li>Stripe</li><li>WhatsApp Business API</li><li>SMS gateways</li><li>OmniAuth</li></ul></div>
+        <div class="sk"><h3>Cloud and DevOps</h3><ul class="chips"><li>Heroku pipelines</li><li>Review apps</li><li>AWS Lambda</li><li>AWS S3</li><li>Docker</li><li>CI/CD</li><li>Git · GitHub · Bitbucket</li></ul></div>
+        <div class="sk"><h3>Monitoring</h3><ul class="chips"><li>Datadog</li><li>Slack alerts</li><li>Logtail</li></ul></div>
+        <div class="sk"><h3>Testing</h3><ul class="chips"><li>RSpec</li><li>Capybara</li><li>Jest</li><li>TDD</li></ul></div>
+        <div class="sk"><h3>AI-assisted development</h3><ul class="chips"><li>Claude</li><li>Cursor</li><li>Agentic coding</li><li>Test generation</li><li>Code review</li></ul></div>
+        <div class="sk"><h3>Working tools</h3><ul class="chips"><li>Postman</li><li>Jira</li><li>Slack</li><li>Agile / Scrum</li></ul></div>
+      </div>
+      <div class="edu">
+        <h3>Education</h3>
+        <p>Bachelor of Technology · Kakinada Institute of Engineering and Technology · 2018 to 2022</p>
+        <p>Diploma in Engineering · Government Polytechnic, Pithapuram · 2015 to 2018</p>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact">
+        <span class="label">Contact</span>
+        <h2>Let's talk about <span class="gt">what you are building.</span></h2>
+        <p>Email is the quickest way to reach me. I can share code samples, walk through Momentum OS live, or go deeper on any area above.</p>
+        <div class="row">
+          <span class="addr" id="addr">bhaskar19191@gmail.com</span>
+          <button class="btn primary" id="copy" type="button">Copy email</button>
+          <a class="btn" href="https://github.com/bhaskar8074" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>© 2026 Bhaskararao Karnena</span><span>Ruby on Rails · Kafka · ClickHouse · React</span></footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  var reduce = false;
+  try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+  /* copy email */
+  var btn = document.getElementById('copy'), addr = document.getElementById('addr');
+  function select() { var r = document.createRange(); r.selectNodeContents(addr); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  btn.addEventListener('click', function () {
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy email'; }, 1800); };
+    try { navigator.clipboard.writeText(addr.textContent).then(done, function () { select(); btn.textContent = 'Press Ctrl+C'; }); }
+    catch (e) { select(); btn.textContent = 'Press Ctrl+C'; }
+  });
+
+  /* card spotlight and tilt (pointer devices only) */
+  try {
+    if (matchMedia('(hover: hover)').matches) {
+      document.querySelectorAll('.card').forEach(function (el) {
+        el.addEventListener('pointermove', function (e) {
+          var r = el.getBoundingClientRect();
+          var px = e.clientX - r.left, py = e.clientY - r.top;
+          el.style.setProperty('--mx', px + 'px'); el.style.setProperty('--my', py + 'px');
+          if (!reduce) {
+            el.style.setProperty('--ry', ((px / r.width - 0.5) * 4).toFixed(2) + 'deg');
+            el.style.setProperty('--rx', (-(py / r.height - 0.5) * 4).toFixed(2) + 'deg');
+          }
+        });
+        el.addEventListener('pointerleave', function () { el.style.setProperty('--ry', '0deg'); el.style.setProperty('--rx', '0deg'); el.style.setProperty('--my', '-20%'); });
+      });
+    }
+  } catch (e) {}
+
+  /* 3D platform map */
+  var stage = document.getElementById('stage'), fb = document.getElementById('fallback');
+  var renderer;
+  try {
+    if (!window.THREE) throw new Error('three missing');
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  } catch (e) { stage.hidden = true; fb.hidden = false; return; }
+  stage.appendChild(renderer.domElement);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  var root = new THREE.Group(); scene.add(root);
+
+  function css(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+  function tex(inner) {
+    var c = document.createElement('canvas'); c.width = c.height = 128; var g = c.getContext('2d');
+    var gr = g.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(inner, 'rgba(255,255,255,0.9)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(c);
+  }
+  var dotTex = tex(0.55), glowTex = tex(0.05);
+  var M = {
+    core: new THREE.MeshBasicMaterial(),
+    wire: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.85 }),
+    ring: new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9 }),
+    ring2: new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9 }),
+    node: new THREE.MeshBasicMaterial(),
+    named: new THREE.MeshBasicMaterial(),
+    edge: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.4 }),
+    dot: new THREE.PointsMaterial({ size: 0.42, map: dotTex, transparent: true, depthWrite: false }),
+    stars: new THREE.PointsMaterial({ size: 0.12, map: dotTex, transparent: true, opacity: 0.55, depthWrite: false }),
+    glow: new THREE.SpriteMaterial({ map: glowTex, transparent: true, opacity: 0.55, depthWrite: false })
+  };
+  function colors() {
+    var a = css('--accent'), b = css('--accent2');
+    M.core.color.set(b); M.wire.color.set(a); M.ring.color.set(a); M.ring2.color.set(b);
+    M.node.color.set(css('--muted')); M.named.color.set(a); M.edge.color.set(b);
+    M.dot.color.set(a); M.stars.color.set(css('--muted')); M.glow.color.set(b);
+  }
+  colors();
+
+  var glow = new THREE.Sprite(M.glow); glow.scale.set(7.5, 7.5, 1); root.add(glow);
+  root.add(new THREE.Mesh(new THREE.SphereGeometry(1.0, 32, 24), M.core));
+  root.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.45, 1)), M.wire));
+  var ring1 = new THREE.Mesh(new THREE.TorusGeometry(2.4, 0.04, 8, 120), M.ring); ring1.rotation.x = Math.PI / 2.35; root.add(ring1);
+  var ring2 = new THREE.Mesh(new THREE.TorusGeometry(2.4, 0.04, 8, 120), M.ring2); ring2.rotation.set(Math.PI / 2.35, 0, Math.PI / 2.6); root.add(ring2);
+
+  /* faint starfield */
+  var SN = 140, sp = new Float32Array(SN * 3);
+  for (var s = 0; s < SN; s++) { var u = Math.random() * 2 - 1, th0 = Math.random() * 6.2832, rad = 7 + Math.random() * 3, q = Math.sqrt(1 - u * u); sp[s * 3] = Math.cos(th0) * q * rad; sp[s * 3 + 1] = u * rad; sp[s * 3 + 2] = Math.sin(th0) * q * rad; }
+  var sg = new THREE.BufferGeometry(); sg.setAttribute('position', new THREE.BufferAttribute(sp, 3)); root.add(new THREE.Points(sg, M.stars));
+
+  var N = 16, pts = [], named = { 1: 'Payments', 4: 'Communications', 6: 'Zoho Books sync', 9: 'Vantage reporting', 11: 'ClickHouse', 14: 'Ask Vantage' };
+  for (var i = 0; i < N; i++) {
+    var y = 1 - (i + 0.5) * 2 / N, rr = Math.sqrt(1 - y * y), th = i * 2.399963, R = 4.5 + (i % 3) * 0.3;
+    var p = new THREE.Vector3(Math.cos(th) * rr * R, y * R * 0.95, Math.sin(th) * rr * R);
+    pts.push(p);
+    var isNamed = named[i] !== undefined;
+    var m = new THREE.Mesh(new THREE.SphereGeometry(isNamed ? 0.3 : 0.18, 16, 12), isNamed ? M.named : M.node);
+    m.position.copy(p); root.add(m);
+    root.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([p, new THREE.Vector3(0, 0, 0)]), M.edge));
+  }
+
+  /* events travelling along the edges */
+  var P = 48, parts = [], pos = new Float32Array(P * 3), pg = new THREE.BufferGeometry();
+  for (i = 0; i < P; i++) parts.push({ e: (Math.random() * N) | 0, t: Math.random(), dir: Math.random() < 0.5 ? 1 : -1, s: 0.004 + Math.random() * 0.006 });
+  pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  root.add(new THREE.Points(pg, M.dot));
+  function stepParts() {
+    for (var k = 0; k < P; k++) {
+      var q = parts[k]; q.t += q.s;
+      if (q.t >= 1) { q.t = 0; q.e = (Math.random() * N) | 0; q.dir = Math.random() < 0.5 ? 1 : -1; }
+      var f = q.dir > 0 ? 1 - q.t : q.t, v = pts[q.e];
+      pos[k * 3] = v.x * f; pos[k * 3 + 1] = v.y * f; pos[k * 3 + 2] = v.z * f;
+    }
+    pg.attributes.position.needsUpdate = true;
+  }
+  stepParts();
+
+  /* labels that follow their nodes */
+  function mk(text, cls) { var el = document.createElement('span'); el.className = 'tag3d' + (cls ? ' ' + cls : ''); el.textContent = text; stage.appendChild(el); return el; }
+  var labels = [{ el: mk('Rails monolith', 'core'), p: new THREE.Vector3(0, -1.9, 0) }];
+  Object.keys(named).forEach(function (k) { labels.push({ el: mk(named[k]), p: pts[k].clone().add(new THREE.Vector3(0, 0.62, 0)) }); });
+  var tmp = new THREE.Vector3();
+  function placeLabels() {
+    var w = stage.clientWidth, h = stage.clientHeight; root.updateMatrixWorld();
+    labels.forEach(function (l) {
+      tmp.copy(l.p); root.localToWorld(tmp);
+      var depth = Math.max(0, Math.min(1, (tmp.z + 5.5) / 11));
+      tmp.project(camera);
+      l.el.style.transform = 'translate(' + ((tmp.x * 0.5 + 0.5) * w).toFixed(1) + 'px,' + ((-tmp.y * 0.5 + 0.5) * h).toFixed(1) + 'px) translate(-50%,-50%)';
+      l.el.style.opacity = (0.4 + 0.6 * depth).toFixed(2);
+    });
+  }
+
+  function size() {
+    var w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.position.set(0, 0.5, 15.5 / Math.min(1, w / h)); camera.lookAt(0, 0, 0);
+    camera.updateProjectionMatrix();
+  }
+  function render() { renderer.render(scene, camera); placeLabels(); }
+
+  /* drag to rotate */
+  var drag = false, lx = 0, ly = 0, spin = reduce ? 0 : 0.0028, base = spin;
+  root.rotation.set(0.28, 0.6, 0);
+  stage.addEventListener('pointerdown', function (e) { drag = true; lx = e.clientX; ly = e.clientY; try { stage.setPointerCapture(e.pointerId); } catch (x) {} });
+  stage.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var dx = e.clientX - lx, dy = e.clientY - ly; lx = e.clientX; ly = e.clientY;
+    root.rotation.y += dx * 0.008; root.rotation.x = Math.max(-0.9, Math.min(0.9, root.rotation.x + dy * 0.006));
+    spin = Math.max(-0.05, Math.min(0.05, dx * 0.0016));
+    if (reduce) render();
+  });
+  function end() { drag = false; }
+  stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
+
+  /* run only while visible */
+  var visible = true, raf = 0;
+  function frame() {
+    raf = 0; if (!visible) return;
+    if (!drag) { root.rotation.y += spin; spin += (base - spin) * 0.02; }
+    stepParts(); render();
+    if (!reduce) raf = requestAnimationFrame(frame);
+  }
+  function start() { if (!reduce && !raf && visible) raf = requestAnimationFrame(frame); }
+  try { new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible) start(); }).observe(stage); } catch (e) {}
+  try { new ResizeObserver(function () { size(); render(); }).observe(stage); } catch (e) { window.addEventListener('resize', function () { size(); render(); }); }
+
+  /* follow the page theme */
+  function retheme() { colors(); render(); }
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (e) {}
+  try { new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] }); } catch (e) {}
+
+  size(); render(); start();
+})();
+</script>
+
+</body>
+</html>
