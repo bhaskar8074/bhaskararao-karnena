@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="dark light">
+<meta name="color-scheme" content="dark">
 <meta name="description" content="Bhaskararao Karnena: Ruby on Rails developer. Kafka, ClickHouse, payments, React.">
 <meta property="og:title" content="Bhaskararao Karnena">
 <style>[hidden]{display:none!important}</style>
@@ -35,18 +35,7 @@
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
   color-scheme: dark;
 }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg: #f3f6fc; --bg2: #e9eef9; --surface: #ffffff; --surface2: #f6f8ff; --ink: #0c1226; --muted: #4a5675; --line: #d5dcee;
-    --accent: #0a7c6e; --accent2: #4558ee; --accent-ink: #ffffff; --spot: rgba(10, 124, 110, 0.1);
-    --glow1: rgba(45, 212, 191, 0.22); --glow2: rgba(99, 120, 255, 0.2); --nav: rgba(255, 255, 255, 0.78); color-scheme: light;
-  }
-}
-:root[data-theme="light"] {
-  --bg: #f3f6fc; --bg2: #e9eef9; --surface: #ffffff; --surface2: #f6f8ff; --ink: #0c1226; --muted: #4a5675; --line: #d5dcee;
-  --accent: #0a7c6e; --accent2: #4558ee; --accent-ink: #ffffff; --spot: rgba(10, 124, 110, 0.1);
-  --glow1: rgba(45, 212, 191, 0.22); --glow2: rgba(99, 120, 255, 0.2); --nav: rgba(255, 255, 255, 0.78); color-scheme: light;
-}
+/* dark only: the page keeps its dark look even when the viewer prefers light */
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 body {
