@@ -222,6 +222,8 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
   .tile.in { animation: none; }
   .strip .track span::after { margin-left: 17px; }
 }
+
+.stage { box-shadow: 0 50px 80px -50px color-mix(in srgb, var(--accent2) 55%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.07); }
 </style>
 
 
@@ -464,7 +466,7 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
     </section>
   </main>
 
-  <footer><span>© 2026 Bhaskararao Karnena</span><span>Ruby on Rails · Kafka · ClickHouse · React</span></footer>
+  <footer><span>© 2026 Bhaskararao Karnena</span><span>Logos are trademarks of their respective owners and are shown only to name the tools I use.</span></footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -573,6 +575,7 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
     edge: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.26 }),
     dot: new THREE.PointsMaterial({ size: 0.4, map: dotTex, transparent: true, depthWrite: false }),
     stars: new THREE.PointsMaterial({ size: 0.12, map: dotTex, transparent: true, opacity: 0.55, depthWrite: false }),
+    dust: new THREE.PointsMaterial({ size: 0.26, map: dotTex, transparent: true, opacity: 0.4, depthWrite: false }),
     glow: new THREE.SpriteMaterial({ map: glowTex, transparent: true, opacity: 0.5, depthWrite: false }),
     r1: new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85 }),
     r2: new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85 })
@@ -580,7 +583,7 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
   function colors() {
     var a = css('--accent'), b = css('--accent2');
     M.orbit.color.set(a); M.orbit2.color.set(b); M.edge.color.set(b); M.dot.color.set(a);
-    M.stars.color.set(css('--muted')); M.glow.color.set(b); M.r1.color.set(a); M.r2.color.set(b);
+    M.stars.color.set(css('--muted')); M.dust.color.set(a); M.glow.color.set(b); M.r1.color.set(a); M.r2.color.set(b);
   }
   colors();
 
@@ -595,7 +598,7 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
   var OUTER = ['react', 'heroku', 'datadog', 'docker', 'amazonaws', 'razorpay', 'stripe', 'zoho', 'whatsapp'];
 
   /* tile geometry: rounded slab, front face mapped 0..1 */
-  var GEO;
+  var GEO, SGEO;
   function tileGeo() {
     if (GEO) return GEO;
     var x = -0.5, y = -0.5, w = 1, r = 0.2, s = new THREE.Shape();
@@ -603,8 +606,10 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
     s.lineTo(x + w, y + w - r); s.quadraticCurveTo(x + w, y + w, x + w - r, y + w);
     s.lineTo(x + r, y + w); s.quadraticCurveTo(x, y + w, x, y + w - r);
     s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
-    GEO = new THREE.ExtrudeGeometry(s, { depth: 0.16, bevelEnabled: true, bevelThickness: 0.03, bevelSize: 0.03, bevelSegments: 2, curveSegments: 8 });
-    GEO.translate(0, 0, -0.08);
+    GEO = new THREE.ExtrudeGeometry(s, { depth: 0.28, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.035, bevelSegments: 3, curveSegments: 8 });
+    GEO.translate(0, 0, -0.14);
+    SGEO = new THREE.ShapeGeometry(s, 8);
+    var su = SGEO.attributes.uv; for (var j = 0; j < su.count; j++) su.setXY(j, su.getX(j) + 0.5, su.getY(j) + 0.5);
     var uv = GEO.attributes.uv;
     for (var i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) + 0.5, uv.getY(i) + 0.5);
     return GEO;
@@ -624,6 +629,10 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
     g.save(); g.translate((S - 134) / 2, (S - 134) / 2); g.scale(134 / 24, 134 / 24); g.fillStyle = col; g.fill(new Path2D(ICONS[key][0])); g.restore();
   }
 
+  var sheenCv = document.createElement('canvas'); sheenCv.width = sheenCv.height = 128;
+  (function () { var g = sheenCv.getContext('2d'), gr = g.createLinearGradient(0, 0, 128, 128);
+    gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.44, 'rgba(255,255,255,0)'); gr.addColorStop(0.5, 'rgba(255,255,255,0.5)'); gr.addColorStop(0.56, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 128, 128); })();
   var recs = [], meshes = [], rings = [];
   function makeUnit(key, size, parent, delay) {
     var cv = document.createElement('canvas'); cv.width = cv.height = 256;
@@ -632,20 +641,29 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
     var mesh = new THREE.Mesh(tileGeo(), [face, side]);
     var gl = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, opacity: 0.4, depthWrite: false }));
     gl.scale.set(2.4, 2.4, 1); gl.position.z = -0.3;
-    var u = new THREE.Group(); u.add(gl); u.add(mesh); parent.add(u);
-    var rec = { u: u, key: key, cv: cv, tx: tx, side: side, gl: gl, size: size, hov: 0, delay: delay, ph: Math.random() * 6.28, bob: 0.16 };
+    var st = new THREE.CanvasTexture(sheenCv); st.wrapS = st.wrapT = THREE.RepeatWrapping;
+    var sheen = new THREE.Mesh(tileGeo() && SGEO, new THREE.MeshBasicMaterial({ map: st, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.9 }));
+    sheen.position.z = 0.182;
+    var u = new THREE.Group(); u.add(gl); u.add(mesh); u.add(sheen); parent.add(u);
+    var rec = { sheenMat: sheen.material, st: st, face: face, u: u, key: key, cv: cv, tx: tx, side: side, gl: gl, size: size, hov: 0, delay: delay, ph: Math.random() * 6.28, bob: 0.16 };
     mesh.userData.rec = rec; meshes.push(mesh); recs.push(rec); paintUnit(rec); return rec;
   }
   function paintUnit(r) {
     var light = isLight(); drawTile(r.cv, r.key, light); r.tx.needsUpdate = true;
     var c = new THREE.Color(adapt(ICONS[r.key][1], light));
-    r.gl.material.color.copy(c); r.side.color.copy(c).multiplyScalar(light ? 0.8 : 0.7);
+    r.gl.material.color.copy(c); r.sheenMat.opacity = light ? 0.22 : 0.4; LM = light; r.sideBase = c.clone().multiplyScalar(light ? 0.8 : 0.7); r.side.color.copy(r.sideBase);
   }
 
   var core = makeUnit('rubyonrails', 2.3, root, 0); core.bob = 0.08;
   var glow = new THREE.Sprite(M.glow); glow.scale.set(8, 8, 1); glow.position.z = -1; root.add(glow);
   var cr1 = new THREE.Mesh(new THREE.TorusGeometry(1.95, 0.035, 8, 120), M.r1); cr1.rotation.x = Math.PI / 2.3; root.add(cr1);
   var cr2 = new THREE.Mesh(new THREE.TorusGeometry(1.95, 0.035, 8, 120), M.r2); cr2.rotation.set(Math.PI / 2.3, 0, Math.PI / 2.6); root.add(cr2);
+
+  var wire = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.75, 1)), M.orbit); root.add(wire);
+  var DN = 110, dp = new Float32Array(DN * 3);
+  for (var d = 0; d < DN; d++) { var uu = Math.random() * 2 - 1, tt = Math.random() * 6.2832, rr = 5.5 + Math.random() * 4.5, qq = Math.sqrt(1 - uu * uu); dp[d * 3] = Math.cos(tt) * qq * rr; dp[d * 3 + 1] = uu * rr; dp[d * 3 + 2] = Math.sin(tt) * qq * rr; }
+  var dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+  var dust = new THREE.Points(dg, M.dust); dust.frustumCulled = false; root.add(dust);
 
   function addRing(list, R, size, tilt, speed, mat, start) {
     var g = new THREE.Group(); g.rotation.set(tilt[0], tilt[1], tilt[2]); g.userData.speed = speed; root.add(g); rings.push(g);
@@ -676,6 +694,7 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
   var dots = new THREE.Points(pg, M.dot); dots.frustumCulled = false; root.add(dots);
 
   var v3 = new THREE.Vector3(), qp = new THREE.Quaternion(), qt = new THREE.Quaternion(), eu = new THREE.Euler();
+  var lastT = performance.now(), LM = isLight();
   var T = 0, ptx = 0, pty = 0, tx0 = 0, ty0 = 0;
   function eob(x) { x = Math.max(0, Math.min(1, x)); var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); }
   var hovered = null, picked = null, pickUntil = 0;
@@ -701,10 +720,14 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
       r.hov += ((r === active ? 1 : 0) - r.hov) * (reduce ? 1 : 0.18);
       var k = reduce ? 1 : eob((T - r.delay) / 0.9);
       r.u.scale.setScalar(Math.max(0.0001, r.size * k * (1 + 0.3 * r.hov)));
+      r.u.getWorldPosition(v3); var f = Math.max(0, Math.min(1, 1 - (v3.distanceTo(camera.position) - 12.5) / 14)), dim = (LM ? 0.62 : 0.5) + (LM ? 0.38 : 0.5) * f;
+      r.face.color.setScalar(dim); if (r.sideBase) r.side.color.copy(r.sideBase).multiplyScalar(dim);
+      r.gl.material.opacity = 0.16 + 0.3 * f + 0.2 * r.hov;
+      r.st.offset.x = reduce ? 0.12 : ((T * 0.16 + r.ph) % 1);
     });
   }
   function step() {
-    T += 1 / 60;
+    var now = performance.now(); T += Math.min(0.5, (now - lastT) / 1000); lastT = now;
     if (!reduce) {
       rings.forEach(function (g) { g.rotation.y += g.userData.speed; });
       recs.forEach(function (r) { r.u.position.y = Math.sin(T * 1.3 + r.ph) * r.bob * (r.spoke ? 1 : 1); });
@@ -714,7 +737,8 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
       var q = parts[k]; q.t += q.s;
       if (q.t >= 1) { q.t = 0; q.e = (Math.random() * NS) | 0; q.dir = Math.random() < 0.5 ? 1 : -1; }
     }
-    ptx += (tx0 - ptx) * (reduce ? 1 : 0.07); pty += (ty0 - pty) * (reduce ? 1 : 0.07);
+    ptx += (tx0 - ptx) * (reduce ? 1 : 0.07); pty += (ty0 - pty) * (reduce ? 1 : 0.07); aim();
+    if (!reduce) { wire.rotation.y -= 0.004; wire.rotation.x += 0.0025; dust.rotation.y -= 0.0007; }
     if (picked && performance.now() > pickUntil) picked = null;
   }
 
@@ -735,11 +759,13 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
     } else tip.style.opacity = 0;
   }
 
+  var camZ = 17.5;
+  function aim() { camera.position.set(ptx * 1.4, 0.8 - pty * 1.0, camZ); camera.lookAt(0, 0, 0); }
   function size() {
     var w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
-    camera.aspect = w / h; camera.position.set(0, 0.8, 17.5 / Math.min(1, w / h)); camera.lookAt(0, 0, 0);
+    camera.aspect = w / h; camZ = (w < 480 ? 15.6 : 17.5) / Math.min(1, w / h); aim();
     camera.updateProjectionMatrix();
   }
   function render() { sync(); renderer.render(scene, camera); labels(); }
@@ -769,6 +795,8 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
   stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
   stage.addEventListener('pointerleave', function () { hovered = null; tx0 = ty0 = 0; stage.style.cursor = ''; if (reduce) render(); });
 
+  var lastY = window.scrollY || 0;
+  if (!reduce) window.addEventListener('scroll', function () { var y = window.scrollY || 0; spin = Math.max(-0.06, Math.min(0.06, spin + (y - lastY) * 0.0005)); lastY = y; }, { passive: true });
   var visible = true, raf = 0;
   function frame() {
     raf = 0; if (!visible) return;
