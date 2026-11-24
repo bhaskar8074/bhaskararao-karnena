@@ -280,8 +280,8 @@ footer { padding-block: 28px 0; color: var(--muted); font-size: 13px; display: f
           <ul class="pts cols">
             <li><b>Reporting APIs and charts.</b> Rails APIs and React.js visualisations for sales, inventory and operations across multi-country customers.</li>
             <li><b>ClickHouse as the warehouse.</b> Moved heavy aggregation off the transactional PostgreSQL database.</li>
-            <li><b>PostgreSQL to ClickHouse migration.</b> Worked in the Go codebase on a large migration and data insertion of orders, order items, inventory and status histories, with integrity checks and re-migration of discrepancies.</li>
-            <li><b>Kafka consumers.</b> Built Go consumers for every platform event domain, streaming structured data into ClickHouse for near-real-time reporting.</li>
+            <li><b>PostgreSQL to ClickHouse migration.</b> Contributed to a Go-based data pipeline that migrated orders, order items, inventory and status histories, with integrity checks and re-migration of discrepancies.</li>
+            <li><b>Kafka event handlers.</b> Wrote Go handlers for orders, payments, inventory, promotions, tax and master data, streaming into ClickHouse for near-real-time reporting, and fixed late and out-of-order event bugs.</li>
             <li><b>Redis cache.</b> Frequently read master data is cached, reducing repeated database lookups across reporting endpoints.</li>
             <li><b>Business summary emails.</b> Scheduled Sidekiq jobs compile key metrics and email them to business owners and stakeholders.</li>
           </ul>
